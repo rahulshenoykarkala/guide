@@ -1,6 +1,4 @@
 //ADD YOUR CODE HERE.
-getItemsById = (list, id) => list.filter(item => item.id === id)
-getFirst = (list) => list.length > 0 ? list[0] : null;
 
 class Player{
     constructor(data){
@@ -9,13 +7,14 @@ class Player{
     }
     play(){
         const element = $(this.step.selector)[0];
-        element.style.backgroundColor = "#999";
+        const next = showTip(element, this.step.content, this.step.placement, this.step.next !== null)
         const interaction = (event) => {
-            element.removeEventListener("click", interaction);
-            element.style.backgroundColor = "#fff";
-            this.playNext();
+            next.removeEventListener("click", interaction);
+            hideTip();
+            this.step.next !== null && this.playNext();
         };
-        element.addEventListener("click", interaction);
+        $(element).on('hidden.bs.popover', interaction)
+        next.addEventListener("click", interaction);
     }
     playNext(){
         this.step = getFirst(getItemsById(this.steps, this.step.next));
